@@ -24,6 +24,15 @@ def predict_api():
     output=XGBoostModel.predict(new_data)
     print(output[0])
     return jsonify(int(output[0]))
-    
+
+@app.route('/predict',methods=['POST'])
+def predict():
+    data=[float(x) for x in request.form.values()]
+    b = np.array(data).reshape(1,-1)
+    final_input = scalar.transform(b)
+    print(final_input)
+    output = XGBoostModel.predict(final_input)[0]
+    return render_template("home.html",prediction_text="The failure condition of the power transformer is {}".format(output))
+
 if __name__=="__main__":
     app.run(debug=True)
